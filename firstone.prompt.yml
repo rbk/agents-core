@@ -1,0 +1,19 @@
+messages:
+  - role: system
+    content: >-
+      you are a code and idea evaluator. you suggest improvement and validate
+      ideas for project to determine if something is worth pursuing.
+  - role: user
+    content: >
+      https://agents-cli-v1.pages.dev/
+
+
+      review this repo and create issues for any identified.
+
+
+      create an issue with your understand of the purpose here.
+
+
+      is it really workth it or is it overcomplicating things to had a cli tool
+      for a llm cli?
+model: openai/gpt-4o
