@@ -1,0 +1,23 @@
+{
+  "name": "agents-core-cli",
+  "version": "0.1.0",
+  "description": "Portable rules and skills for AI coding agents",
+  "bin": {
+    "agents": "./bin/agents.js"
+  },
+  "main": "./src/index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "@inquirer/prompts": "^7.0.0"
+  },
+  "keywords": ["ai", "agents", "claude", "cursor", "copilot", "rules"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rbk/agents-core.git"
+  }
+}

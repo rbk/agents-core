@@ -1,0 +1,8 @@
+/install
+  Content-Type: text/plain; charset=utf-8
+
+/rules/*
+  Content-Type: text/plain; charset=utf-8
+
+/skills/*
+  Content-Type: text/plain; charset=utf-8
