@@ -1,7 +1,10 @@
 # agents-core
 
-Portable coding rules and skill instructions for AI coding agents.
-Works with Claude Code, Cursor, GitHub Copilot, Codex CLI, or any LLM that reads a project config file.
+Every AI coding agent starts fresh. It doesn't know how you like to work, what standards you hold, or what skills it has access to. You end up re-explaining the same preferences across every project, every tool, and every conversation.
+
+**agents-core** is a single source of truth for your coding rules and agent skills. Define them once, install them anywhere — Claude Code, Cursor, GitHub Copilot, Codex CLI, or any LLM that reads a project config file. Rules are plain markdown so they're readable by any agent without special tooling.
+
+When you start a new project, one `curl` command installs your rules. When you want your agent to gain a new capability — like web search or database access — you tell it to set up the skill and it follows the instructions itself.
 
 ## Concepts
 
