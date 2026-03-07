@@ -1,63 +1,78 @@
 #!/usr/bin/env bash
-# install.sh — Import agents-core rules into a project or globally
+# install.sh — Install agents-core rules into a project
+#
+# Defaults to project-level install. Detects which agent config file to use.
 #
 # Usage:
-#   ./scripts/install.sh            # install globally (Claude Code)
-#   ./scripts/install.sh --project  # install into current project directory
+#   # Quickest — pipe directly into bash:
+#   curl -fsSL https://raw.githubusercontent.com/rbk/agents-core/main/scripts/install.sh | bash
+#
+#   # With options:
+#   bash install.sh [--role <role>] [--context <context>] [--global]
+#
+#   --role     coding | research | planning | review  (default: coding)
+#   --context  frontend | backend | devops | data     (optional)
+#   --global   Install to ~/.claude/CLAUDE.md instead of current project
 
 set -e
 
-REPO="https://raw.githubusercontent.com/rbk/agents-core/main/rules"
-MODE="global"
+BASE="https://raw.githubusercontent.com/rbk/agents-core/main"
+ROLE="coding"
+CONTEXT=""
+GLOBAL=false
 
-if [[ "$1" == "--project" ]]; then
-  MODE="project"
-fi
+# Parse args
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --role)     ROLE="$2";    shift 2 ;;
+    --context)  CONTEXT="$2"; shift 2 ;;
+    --global)   GLOBAL=true;  shift   ;;
+    *) echo "Unknown option: $1"; exit 1 ;;
+  esac
+done
 
-append_rules() {
-  local src="$1"
-  local dest="$2"
-  local content
-  content=$(curl -fsSL "$src")
-
-  if [[ -f "$dest" ]]; then
-    echo "Appending to $dest"
-    echo "" >> "$dest"
-    echo "$content" >> "$dest"
+# Detect which config file to use
+detect_config() {
+  if [[ "$GLOBAL" == true ]]; then
+    echo "$HOME/.claude/CLAUDE.md"
+  elif [[ -f "CLAUDE.md" ]]; then
+    echo "CLAUDE.md"
+  elif [[ -f ".cursorrules" ]]; then
+    echo ".cursorrules"
+  elif [[ -f ".github/copilot-instructions.md" ]]; then
+    echo ".github/copilot-instructions.md"
   else
-    echo "Creating $dest"
-    mkdir -p "$(dirname "$dest")"
-    echo "$content" > "$dest"
+    echo "CLAUDE.md"  # default: create it
   fi
 }
 
-if [[ "$MODE" == "global" ]]; then
-  echo "Installing global Claude Code rules -> ~/.claude/CLAUDE.md"
-  append_rules "$REPO/core.md" "$HOME/.claude/CLAUDE.md"
-  append_rules "$REPO/claude.md" "$HOME/.claude/CLAUDE.md"
-  echo ""
-  echo "Done. Rules are now active for all Claude Code projects."
+append() {
+  local url="$1"
+  local dest="$2"
+  local content
+  content=$(curl -fsSL "$url") || { echo "Failed to fetch $url"; exit 1; }
+  mkdir -p "$(dirname "$dest")"
+  echo "" >> "$dest"
+  echo "$content" >> "$dest"
+  echo "  + appended: $(basename "$url") -> $dest"
+}
 
-elif [[ "$MODE" == "project" ]]; then
-  echo "Installing project-level rules..."
+CONFIG=$(detect_config)
+echo "Installing agents-core rules -> $CONFIG"
+echo "  role: $ROLE"
+[[ -n "$CONTEXT" ]] && echo "  context: $CONTEXT"
+echo ""
 
-  # Claude Code
-  append_rules "$REPO/core.md" "./CLAUDE.md"
-  append_rules "$REPO/claude.md" "./CLAUDE.md"
-  echo "  -> CLAUDE.md"
+# Always apply core coding rules
+append "$BASE/rules/core-coding.md" "$CONFIG"
 
-  # Cursor
-  mkdir -p .cursor/rules
-  append_rules "$REPO/core.md" "./.cursor/rules/core.md"
-  append_rules "$REPO/cursor.md" "./.cursor/rules/cursor.md"
-  echo "  -> .cursor/rules/"
+# Role rules
+append "$BASE/rules/roles/$ROLE.md" "$CONFIG"
 
-  # GitHub Copilot
-  mkdir -p .github
-  append_rules "$REPO/core.md" "./.github/copilot-instructions.md"
-  append_rules "$REPO/copilot.md" "./.github/copilot-instructions.md"
-  echo "  -> .github/copilot-instructions.md"
-
-  echo ""
-  echo "Done. Rules installed for Claude Code, Cursor, and GitHub Copilot."
+# Context rules (optional)
+if [[ -n "$CONTEXT" ]]; then
+  append "$BASE/rules/contexts/$CONTEXT.md" "$CONFIG"
 fi
+
+echo ""
+echo "Done."

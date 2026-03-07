@@ -1,41 +1,101 @@
 # agents-core
 
-Shared coding rules for AI coding agents (Claude Code, Cursor, GitHub Copilot, etc.).
+Portable coding rules and skill instructions for AI coding agents.
+Works with Claude Code, Cursor, GitHub Copilot, Codex CLI, or any LLM that reads a project config file.
 
-## Rules
+## Concepts
 
-| File | Purpose |
-|------|---------|
-| `rules/core.md` | Universal rules — applied to all projects and all agents |
-| `rules/claude.md` | Claude Code-specific additions |
-| `rules/cursor.md` | Cursor-specific additions |
-| `rules/copilot.md` | GitHub Copilot-specific additions |
+| Concept | Description |
+|---------|-------------|
+| **Core rules** | `alwaysApply: true` — always active, every project |
+| **Roles** | What the agent is doing: coding, research, planning, review |
+| **Contexts** | What domain it's working in: frontend, backend, devops, data |
+| **Skills** | Additive capabilities an agent can be instructed to set up (research, browser, database) |
 
 ## Quick Install
 
-### Global (Claude Code only — applies to every project)
+Installs into the project-level config file that's already present (`CLAUDE.md`, `.cursorrules`, `.github/copilot-instructions.md`). Creates `CLAUDE.md` if none found.
 
 ```bash
+# Default: coding role, project-level
 curl -fsSL https://raw.githubusercontent.com/rbk/agents-core/main/scripts/install.sh | bash
+
+# With role + context
+curl -fsSL https://raw.githubusercontent.com/rbk/agents-core/main/scripts/install.sh | bash -s -- --role coding --context backend
+
+# Global (Claude Code only, applies to every project)
+curl -fsSL https://raw.githubusercontent.com/rbk/agents-core/main/scripts/install.sh | bash -s -- --global
 ```
 
-### Per-project (all agents)
+### Roles
+| Value | Description |
+|-------|-------------|
+| `coding` | Write, modify, and review code (default) |
+| `research` | Find, synthesize, and cite information |
+| `planning` | Break goals into actionable tasks |
+| `review` | Review code, docs, or plans and give feedback |
 
-Run from your project root:
+### Contexts
+| Value | Description |
+|-------|-------------|
+| `frontend` | UI, components, accessibility |
+| `backend` | APIs, validation, databases |
+| `devops` | Infrastructure, CI/CD, monitoring |
+| `data` | Pipelines, ingestion, transformation |
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/rbk/agents-core/main/scripts/install.sh | bash -s -- --project
+## Adding Skills
+
+Tell your agent: *"Set up the research skill"* — it will read `skills/research/setup.md` and follow the instructions (ask for API keys, update `.env`, append rules to your config file).
+
+### Available Skills
+
+| Skill | What it sets up |
+|-------|----------------|
+| `research` | Brave Search API — web search with cited results |
+| `browser` | Headless browser via Browserless or local Playwright |
+| `database` | DB connection, ORM setup, migrations |
+
+To add a skill manually, point your agent at the setup file:
+```
+https://raw.githubusercontent.com/rbk/agents-core/main/skills/<skill>/setup.md
 ```
 
-This writes to:
-- `./CLAUDE.md` — Claude Code
-- `./.cursor/rules/` — Cursor
-- `./.github/copilot-instructions.md` — GitHub Copilot
+## Core Coding Rules (`alwaysApply: true`)
 
-## Core Rules
+Always active regardless of role or context:
 
-1. **Small, reusable functions** — single responsibility, extract repeated logic into helpers
-2. **Always write tests** — every new function needs corresponding tests
-3. **Prefer modern libraries** — don't reimplement what a well-maintained library already does
-4. **Organize utilities** — shared helpers go in `lib/` or `utils/`, not scattered across files
-5. **Check before you write** — search the codebase first; reuse existing code rather than duplicating
+1. Small, reusable functions
+2. Always write tests
+3. Prefer modern libraries over custom implementations
+4. Organize utilities
+5. Check before you write — don't duplicate existing code
+6. Always flag security design flaws and offer fixes
+
+## Structure
+
+```
+rules/
+  core-coding.md       ← alwaysApply: true
+  roles/
+    coding.md
+    research.md
+    planning.md
+    review.md
+  contexts/
+    frontend.md
+    backend.md
+    devops.md
+    data.md
+skills/
+  research/
+    setup.md           ← LLM-readable setup instructions
+    rules.md           ← injected into project config when skill is active
+  browser/
+    setup.md
+    rules.md
+  database/
+    setup.md
+    rules.md
+scripts/
+  install.sh
+```
