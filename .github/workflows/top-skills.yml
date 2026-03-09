@@ -1,0 +1,27 @@
+name: Top 10 Agent Skills
+
+on:
+  schedule:
+    # Every Monday at 9:30 AM UTC (after ai-updates)
+    - cron: "30 9 * * 1"
+  workflow_dispatch:
+
+jobs:
+  top-skills:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Fetch top skills and create issue
+        run: node .github/workflows/top-skills.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}

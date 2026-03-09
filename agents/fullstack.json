@@ -1,0 +1,42 @@
+{
+  "name": "fullstack",
+  "category": "fullstack",
+  "description": "Full-stack development — frontend, backend API, database, deployment",
+  "model": "claude-sonnet-4-6",
+  "rules": [
+    "rules/core-coding.md",
+    "rules/roles/coding.md",
+    "rules/contexts/frontend.md",
+    "rules/contexts/backend.md",
+    "rules/contexts/testing.md"
+  ],
+  "skills": [
+    "git",
+    "http-analyzer",
+    "database",
+    "browser",
+    "research"
+  ],
+  "mcpServers": [
+    {
+      "name": "postgres",
+      "description": "Direct PostgreSQL access for schema inspection and queries",
+      "install": "npx -y @modelcontextprotocol/server-postgres postgresql://localhost/mydb"
+    },
+    {
+      "name": "puppeteer",
+      "description": "Browser automation for visual testing and scraping",
+      "install": "npx -y @modelcontextprotocol/server-puppeteer"
+    },
+    {
+      "name": "github",
+      "description": "GitHub API — PRs, issues, repo management",
+      "install": "npx -y @modelcontextprotocol/server-github"
+    },
+    {
+      "name": "brave-search",
+      "description": "Web search for docs and references",
+      "install": "npx -y @modelcontextprotocol/server-brave-search"
+    }
+  ]
+}

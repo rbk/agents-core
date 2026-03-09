@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>agents-core — portable rules for AI coding agents</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+      background: #0d0d0d;
+      color: #e8e8e8;
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+
+    .container { max-width: 760px; margin: 0 auto; }
+
+    header { margin-bottom: 3rem; }
+    header h1 { font-size: 1.8rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
+    header p { color: #aaa; font-size: 1rem; max-width: 560px; }
+
+    .problem {
+      background: #161616;
+      border-left: 3px solid #444;
+      padding: 1rem 1.25rem;
+      border-radius: 4px;
+      margin-bottom: 2.5rem;
+      color: #bbb;
+      font-size: 0.95rem;
+    }
+
+    section { margin-bottom: 2.5rem; }
+    h2 { font-size: 1rem; font-weight: 600; color: #fff; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1rem; }
+
+    .cmd {
+      background: #111;
+      border: 1px solid #2a2a2a;
+      border-radius: 6px;
+      padding: 0.9rem 1.1rem;
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 0.85rem;
+      color: #7ee787;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .cmd span { flex: 1; word-break: break-all; }
+
+    .copy-btn {
+      background: #1f1f1f;
+      border: 1px solid #333;
+      color: #aaa;
+      font-size: 0.75rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 4px;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .copy-btn:hover { background: #2a2a2a; color: #fff; }
+    .copy-btn.copied { color: #7ee787; border-color: #7ee787; }
+
+    .note { font-size: 0.8rem; color: #666; margin-top: 0.4rem; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.75rem; }
+
+    .tag {
+      background: #161616;
+      border: 1px solid #2a2a2a;
+      border-radius: 6px;
+      padding: 0.6rem 0.9rem;
+    }
+    .tag .name { font-family: monospace; font-size: 0.85rem; color: #79c0ff; }
+    .tag .desc { font-size: 0.78rem; color: #666; margin-top: 0.2rem; }
+
+    .rules-list { list-style: none; }
+    .rules-list li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #1a1a1a;
+      font-size: 0.9rem;
+      color: #ccc;
+      display: flex;
+      gap: 0.75rem;
+    }
+    .rules-list li::before { content: "—"; color: #444; flex-shrink: 0; }
+
+    footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #1a1a1a; font-size: 0.8rem; color: #555; }
+    footer a { color: #666; }
+    footer a:hover { color: #aaa; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>agents-core</h1>
+      <p>Portable rules and skills for AI coding agents. One source of truth, any tool, any project.</p>
+    </header>
+
+    <div class="problem">
+      Every AI coding agent starts fresh. It doesn't know your standards, your workflow, or what capabilities it has access to. You re-explain the same things in every project and every conversation. agents-core fixes that.
+    </div>
+
+    <section>
+      <h2>Install into a project</h2>
+      <div class="cmd">
+        <span id="cmd-default">curl -fsSL https://agents-cli-v1.pages.dev/install | bash</span>
+        <button class="copy-btn" onclick="copy('cmd-default', this)">copy</button>
+      </div>
+      <p class="note">Detects your agent config file (CLAUDE.md, .cursorrules, copilot-instructions.md). Creates CLAUDE.md if none found.</p>
+
+      <br />
+      <div class="cmd">
+        <span id="cmd-role">curl -fsSL https://agents-cli-v1.pages.dev/install | bash -s -- --role coding --context backend</span>
+        <button class="copy-btn" onclick="copy('cmd-role', this)">copy</button>
+      </div>
+      <p class="note">Specify a role and context.</p>
+
+      <br />
+      <div class="cmd">
+        <span id="cmd-npm">npm install -g agents-core-cli</span>
+        <button class="copy-btn" onclick="copy('cmd-npm', this)">copy</button>
+      </div>
+      <p class="note">Or install the CLI for interactive setup: <code style="color:#79c0ff">agents setup</code></p>
+    </section>
+
+    <section>
+      <h2>Roles</h2>
+      <div class="grid">
+        <div class="tag"><div class="name">coding</div><div class="desc">Write, modify, and review code</div></div>
+        <div class="tag"><div class="name">research</div><div class="desc">Find, synthesize, and cite information</div></div>
+        <div class="tag"><div class="name">planning</div><div class="desc">Break goals into actionable tasks</div></div>
+        <div class="tag"><div class="name">review</div><div class="desc">Review code, docs, and plans</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Contexts</h2>
+      <div class="grid">
+        <div class="tag"><div class="name">frontend</div><div class="desc">UI, components, accessibility</div></div>
+        <div class="tag"><div class="name">backend</div><div class="desc">APIs, validation, databases</div></div>
+        <div class="tag"><div class="name">devops</div><div class="desc">Infrastructure, CI/CD, monitoring</div></div>
+        <div class="tag"><div class="name">data</div><div class="desc">Pipelines, ingestion, transformation</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Skills</h2>
+      <div class="grid">
+        <div class="tag"><div class="name">research</div><div class="desc">Brave Search API — web search with citations</div></div>
+        <div class="tag"><div class="name">browser</div><div class="desc">Headless browser via Browserless or Playwright</div></div>
+        <div class="tag"><div class="name">database</div><div class="desc">DB connection, ORM setup, migrations</div></div>
+      </div>
+      <p class="note" style="margin-top:0.75rem">To add a skill, tell your agent: <em>"Set up the research skill"</em> — it reads the setup instructions and configures everything.</p>
+    </section>
+
+    <section>
+      <h2>Core Coding Rules</h2>
+      <ul class="rules-list">
+        <li>Small, reusable functions — single responsibility, extract repeated logic into helpers</li>
+        <li>Always write tests alongside every new function</li>
+        <li>Prefer modern libraries over custom implementations</li>
+        <li>Organize utilities — shared helpers in <code>lib/</code> or <code>utils/</code></li>
+        <li>Check before you write — don't duplicate existing code</li>
+        <li>Always flag security design flaws and offer concrete fixes</li>
+      </ul>
+    </section>
+
+    <footer>
+      <a href="https://github.com/rbk/agents-core" target="_blank">github.com/rbk/agents-core</a>
+    </footer>
+  </div>
+
+  <script>
+    function copy(id, btn) {
+      const text = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'copied';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>

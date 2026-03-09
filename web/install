@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# agents-core install script
+# https://agents-cli-v1.pages.dev/install
+#
+# Usage:
+#   curl -fsSL https://agents-cli-v1.pages.dev/install | bash
+#   curl -fsSL https://agents-cli-v1.pages.dev/install | bash -s -- --role coding --context backend
+#   curl -fsSL https://agents-cli-v1.pages.dev/install | bash -s -- --global
+
+set -e
+
+BASE="https://agents-cli-v1.pages.dev"
+ROLE="coding"
+CONTEXT=""
+GLOBAL=false
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --role)     ROLE="$2";    shift 2 ;;
+    --context)  CONTEXT="$2"; shift 2 ;;
+    --global)   GLOBAL=true;  shift   ;;
+    *) echo "Unknown option: $1"; exit 1 ;;
+  esac
+done
+
+detect_config() {
+  if [[ "$GLOBAL" == true ]]; then
+    echo "$HOME/.claude/CLAUDE.md"
+  elif [[ -f "CLAUDE.md" ]]; then
+    echo "CLAUDE.md"
+  elif [[ -f ".cursorrules" ]]; then
+    echo ".cursorrules"
+  elif [[ -f ".github/copilot-instructions.md" ]]; then
+    echo ".github/copilot-instructions.md"
+  else
+    echo "CLAUDE.md"
+  fi
+}
+
+append() {
+  local url="$1"
+  local dest="$2"
+  local content
+  content=$(curl -fsSL "$url") || { echo "Failed to fetch $url"; exit 1; }
+  mkdir -p "$(dirname "$dest")"
+  echo "" >> "$dest"
+  echo "$content" >> "$dest"
+  echo "  + $(basename "$url") -> $dest"
+}
+
+CONFIG=$(detect_config)
+echo "agents-core install"
+echo "  config: $CONFIG"
+echo "  role:   $ROLE"
+[[ -n "$CONTEXT" ]] && echo "  context: $CONTEXT"
+echo ""
+
+append "$BASE/rules/core-coding.md" "$CONFIG"
+append "$BASE/rules/roles/$ROLE.md" "$CONFIG"
+[[ -n "$CONTEXT" ]] && append "$BASE/rules/contexts/$CONTEXT.md" "$CONFIG"
+
+echo ""
+echo "Done."

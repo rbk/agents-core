@@ -1,0 +1,30 @@
+{
+  "name": "api",
+  "category": "api",
+  "description": "Backend API development — REST, auth, validation, databases, testing",
+  "model": "claude-sonnet-4-6",
+  "rules": [
+    "rules/core-coding.md",
+    "rules/roles/coding.md",
+    "rules/contexts/backend.md",
+    "rules/contexts/testing.md"
+  ],
+  "skills": [
+    "git",
+    "http-analyzer",
+    "database",
+    "research"
+  ],
+  "mcpServers": [
+    {
+      "name": "github",
+      "description": "GitHub API — PRs, issues, repo management",
+      "install": "npx -y @modelcontextprotocol/server-github"
+    },
+    {
+      "name": "brave-search",
+      "description": "Web search for docs and references",
+      "install": "npx -y @modelcontextprotocol/server-brave-search"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "name": "research",
+  "category": "research",
+  "description": "Research and analysis — web search, synthesis, citations, documentation",
+  "model": "claude-haiku-4-5-20251001",
+  "rules": [
+    "rules/core-coding.md",
+    "rules/roles/research.md"
+  ],
+  "skills": [
+    "research",
+    "translate",
+    "prompt-improver",
+    "code-research"
+  ],
+  "mcpServers": [
+    {
+      "name": "brave-search",
+      "description": "Web search — required for research tasks",
+      "install": "npx -y @modelcontextprotocol/server-brave-search"
+    },
+    {
+      "name": "fetch",
+      "description": "Fetch and read web pages and documentation",
+      "install": "npx -y @modelcontextprotocol/server-fetch"
+    }
+  ]
+}

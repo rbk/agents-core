@@ -1,0 +1,35 @@
+name: AI Platform Updates Research
+
+on:
+  schedule:
+    # Every Monday at 9:00 AM UTC
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (log findings without creating issues)"
+        type: boolean
+        default: false
+
+jobs:
+  research-updates:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      models: read  # Required for GitHub Models API access
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Research AI platform updates
+        run: node .github/workflows/research-updates.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          DRY_RUN: ${{ inputs.dry_run || 'false' }}

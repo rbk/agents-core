@@ -1,0 +1,36 @@
+{
+  "name": "axiom",
+  "category": "api",
+  "description": "Production API developer — Node.js, Express, PostgreSQL, JWT auth, REST best practices",
+  "model": "claude-sonnet-4-6",
+  "rules": [
+    "rules/core-coding.md",
+    "rules/roles/coding.md",
+    "rules/contexts/backend.md",
+    "rules/contexts/testing.md",
+    "rules/stacks/node-express-postgres.md"
+  ],
+  "skills": [
+    "git",
+    "http-analyzer",
+    "database",
+    "research"
+  ],
+  "mcpServers": [
+    {
+      "name": "postgres",
+      "description": "Direct PostgreSQL access for schema inspection and queries",
+      "install": "npx -y @modelcontextprotocol/server-postgres postgresql://localhost/mydb"
+    },
+    {
+      "name": "github",
+      "description": "GitHub API — PRs, issues, repo management",
+      "install": "npx -y @modelcontextprotocol/server-github"
+    },
+    {
+      "name": "brave-search",
+      "description": "Web search for docs and references",
+      "install": "npx -y @modelcontextprotocol/server-brave-search"
+    }
+  ]
+}
