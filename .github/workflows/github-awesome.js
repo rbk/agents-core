@@ -63,7 +63,7 @@ function parseEntries(text) {
     }
 
     // Pattern: https://github.com/owner/repo with surrounding text
-    const urlMatch = line.match(/(https:\/\/github\.com\/[\w.-]+\/[\w.-]+)/);
+    const urlMatch = line.match(/(https:\/\/github\.com\/[\w-]+\/[\w.-]+)/);
     if (urlMatch) {
       const url = urlMatch[1];
       const rest = line.replace(url, "").replace(/[-–—|:*#]/g, "").trim();
@@ -110,7 +110,7 @@ function buildIssueBody(entries) {
 }
 
 async function closePreviousIssues() {
-  const url = `${GITHUB_API}/repos/${process.env.GITHUB_REPOSITORY}/issues?labels=${ISSUE_LABEL}&state=open&per_page=100`;
+  const url = `${GITHUB_API}/repos/${process.env.GITHUB_REPOSITORY}/issues?labels=${encodeURIComponent(ISSUE_LABEL)}&state=open&per_page=100`;
   const res = await fetch(url, { headers: githubHeaders() });
   if (!res.ok) return 0;
 
