@@ -1,0 +1,27 @@
+name: GitHub Awesome
+
+on:
+  schedule:
+    # Every Monday at 10:00 AM UTC (after top-skills)
+    - cron: "0 10 * * 1"
+  workflow_dispatch:
+
+jobs:
+  github-awesome:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Fetch GitHub Awesome and create issue
+        run: node .github/workflows/github-awesome.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
